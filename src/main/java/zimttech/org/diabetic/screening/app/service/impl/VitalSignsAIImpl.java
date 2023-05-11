@@ -2,6 +2,7 @@ package zimttech.org.diabetic.screening.app.service.impl;
 
 import org.springframework.stereotype.Service;
 import zimttech.org.diabetic.screening.app.entity.VitalSigns;
+import zimttech.org.diabetic.screening.app.entity.enums.VitalSignsType;
 import zimttech.org.diabetic.screening.app.service.VitalSignsAIService;
 
 import java.util.ArrayList;
@@ -13,8 +14,12 @@ public class VitalSignsAIImpl implements VitalSignsAIService {
     @Override
     public List<String> analyzeVitalSigns(VitalSigns vitalSigns) {
         List<String> notifications = new ArrayList<>();
+        double currentValue = 0;
+        if(!vitalSigns.getVitalSignsType().equals(VitalSignsType.BLOOD_PRESSURE)){
+             currentValue = Double.parseDouble(vitalSigns.getCurrentValue());
+        }
 
-        double currentValue = Double.parseDouble(vitalSigns.getCurrentValue());
+
 
         switch (vitalSigns.getVitalSignsType()) {
             case TEMPERATURE -> analyzeTemperature(currentValue, notifications);

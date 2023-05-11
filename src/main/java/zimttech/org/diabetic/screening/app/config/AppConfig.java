@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class AppConfig {
@@ -16,6 +17,11 @@ public class AppConfig {
         FhirContext fhirContext = FhirContext.forR4();
         String serverBaseUrl = "http://localhost:8082/fhir";
         return fhirContext.newRestfulGenericClient(serverBaseUrl);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 }

@@ -80,15 +80,6 @@ public class PatientServiceImpl implements PatientService {
         patient.setHivAidsRecordNumber(patientDto.getHivAidsRecordNumber());
     }
 
-    @Override
-    public List<Patient> getPatients() {
-        log.info("Getting patients from external API");
-        String url = "http://localhost:8092/api/v1/patients";
-        Patient[] patients = restTemplate.getForObject(url, Patient[].class);
-        List<Patient> patientList = Arrays.asList(patients != null ? patients : new Patient[0]);
-        patientRepository.saveAll(patientList);
-        return patientList;
-    }
 
     private Patient convertDtoToPatient(PatientDto
                                                 patientDto) {

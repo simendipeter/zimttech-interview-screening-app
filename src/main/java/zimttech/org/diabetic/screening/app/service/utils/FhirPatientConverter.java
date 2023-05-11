@@ -69,7 +69,7 @@ public class FhirPatientConverter {
                 .setCode(vitalSigns.getVitalSignsType().toString())
                 .setDisplay(vitalSigns.getVitalSignsType().name());
         observation.setValue(new Quantity()
-                .setValue(Double.parseDouble(vitalSigns.getCurrentValue()))
+                .setValue(0)
                 .setUnit(vitalSigns.getUnitOfMeasurement()));
         observation.setSubject(new Reference("Patient/" + vitalSigns.getPatientId()));
         observation.setEffective(new DateTimeType(String.valueOf(vitalSigns.getLocalDateOfVitalSign())));
