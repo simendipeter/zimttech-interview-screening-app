@@ -16,6 +16,28 @@ services:
         command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8 --explicit_defaults_for_timestamp                        
         networks: 
             - lan
+     client:
+       image: petersimendi/screening-app:v1.0
+       container_name: client
+       restart: always
+       ports:
+         - "8091:8091"
+       depends_on:
+        - mysql
+        - hapi
+       networks:
+         - lan
+     server:
+       image:  petersimendi/mock-server:v1.0
+       container_name: client
+       restart: always
+       ports:
+         - "8092:8092"
+       depends_on:
+         - grafana
+       networks:
+         - lan
+
      hapi:
        image: hapiproject/hapi:latest
        container_name: hapi
