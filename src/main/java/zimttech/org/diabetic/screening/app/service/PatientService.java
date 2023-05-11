@@ -12,4 +12,6 @@ public interface PatientService {
 
     Patient updatePatient(String patientId, PatientDto patientDto);
 
+    List<Patient> getPatients();
+
 }

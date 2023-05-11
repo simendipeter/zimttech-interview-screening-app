@@ -3,17 +3,17 @@ package zimttech.org.diabetic.screening.app.service.impl;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.similarity.CosineDistance;
-import org.apache.commons.text.similarity.JaroWinklerDistance;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import zimttech.org.diabetic.screening.app.entity.Patient;
 import zimttech.org.diabetic.screening.app.entity.dto.PatientDto;
 import zimttech.org.diabetic.screening.app.repository.PatientRepository;
 import zimttech.org.diabetic.screening.app.service.PatientService;
 import zimttech.org.diabetic.screening.app.service.utils.FhirPatientConverter;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,9 +25,12 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepository patientRepository;;
     private final FhirPatientConverter fhirPatientConverter;
 
-    public PatientServiceImpl(PatientRepository patientRepository, FhirPatientConverter fhirPatientConverter) {
+    private final RestTemplate restTemplate;
+
+    public PatientServiceImpl(PatientRepository patientRepository, FhirPatientConverter fhirPatientConverter, RestTemplate restTemplate) {
         this.patientRepository = patientRepository;
         this.fhirPatientConverter = fhirPatientConverter;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -77,7 +80,18 @@ public class PatientServiceImpl implements PatientService {
         patient.setHivAidsRecordNumber(patientDto.getHivAidsRecordNumber());
     }
 
-    private Patient convertDtoToPatient(PatientDto patientDto) {
+    @Override
+    public List<Patient> getPatients() {
+        log.info("Getting patients from external API");
+        String url = "http://localhost:8092/api/v1/patients";
+        Patient[] patients = restTemplate.getForObject(url, Patient[].class);
+        List<Patient> patientList = Arrays.asList(patients != null ? patients : new Patient[0]);
+        patientRepository.saveAll(patientList);
+        return patientList;
+    }
+
+    private Patient convertDtoToPatient(PatientDto
+                                                patientDto) {
         return Patient.builder()
                 .id(UUID.randomUUID().toString())
                 .firstName(patientDto.getFirstName())
