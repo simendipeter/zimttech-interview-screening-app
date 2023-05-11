@@ -31,7 +31,7 @@ public class SyncServiceImpl implements SyncService {
     @Override
     public List<Patient> getPatients() {
         log.info("Getting patients from external API");
-        String url = "http://localhost:8092/api/v1/patients";
+        String url = "http://server:8092/api/v1/patients";
         Patient[] patients = restTemplate.getForObject(url, Patient[].class);
         List<Patient> patientList = Arrays.asList(patients != null ? patients : new Patient[0]);
         patientRepository.saveAll(patientList);
@@ -43,7 +43,7 @@ public class SyncServiceImpl implements SyncService {
         log.info("Getting vitals from database");
         List<VitalSigns> vitalList = vitalSignsRepository.findAll();
         log.info("Posting vitals to external API");
-        String url = "http://localhost:8092/api/v1/vitals";
+        String url = "http://server:8092/api/v1/vitals";
         restTemplate.postForObject(url, vitalList, Void.class);
         return vitalList;
     }

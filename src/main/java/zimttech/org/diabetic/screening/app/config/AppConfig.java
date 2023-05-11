@@ -15,7 +15,7 @@ public class AppConfig {
     @Bean
     public IGenericClient fhirClient() {
         FhirContext fhirContext = FhirContext.forR4();
-        String serverBaseUrl = "http://localhost:8082/fhir";
+        String serverBaseUrl = "http://hapi:8082/fhir";
         return fhirContext.newRestfulGenericClient(serverBaseUrl);
     }
 
